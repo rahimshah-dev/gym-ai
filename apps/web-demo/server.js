@@ -6,6 +6,8 @@ const app = express();
 app.use(express.json({ limit: '12mb' }));
 app.use(express.static(__dirname));
 
+const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+
 function buildPrompt({ time, focus, goal, level }) {
   const timeDesc = time ? `${time} minutes` : 'AI-recommended optimal duration';
   return `Analyze the gym equipment provided. Create a complete workout plan:
@@ -42,61 +44,96 @@ Rules:
 - If time is not specified, recommend the optimal duration`;
 }
 
+function parseDataUrl(dataUrl) {
+  const match = /^data:(image\/[a-zA-Z0-9.+-]+);base64,(.+)$/.exec(dataUrl || '');
+  if (!match) return null;
+  return { mimeType: match[1], data: match[2] };
+}
+
 app.post('/api/generate-plan', async (req, res) => {
-  const apiKey = process.env.OPENAI_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
-    return res.status(500).json({ error: 'Server is missing OPENAI_API_KEY. Add it to .env and restart.' });
+    return res.status(500).json({ error: 'Server is missing GEMINI_API_KEY. Add it to .env and restart.' });
   }
 
   const { equipmentMode, equipmentText, equipmentImage, time, focus, goal, level } = req.body || {};
   const promptText = buildPrompt({ time, focus, goal, level });
 
-  let userContent;
+  const parts = [];
   if (equipmentMode === 'photo' && equipmentImage) {
-    userContent = [
-      { type: 'text', text: promptText },
-      { type: 'image_url', image_url: { url: equipmentImage } }
-    ];
+    const image = parseDataUrl(equipmentImage);
+    if (!image) {
+      return res.status(400).json({ error: 'Equipment photo could not be read. Please try a different image.' });
+    }
+    parts.push({ text: promptText });
+    parts.push({ inline_data: { mime_type: image.mimeType, data: image.data } });
   } else {
-    userContent = `${promptText}\n\nEquipment available: ${equipmentText || ''}`;
+    parts.push({ text: `${promptText}\n\nEquipment available: ${equipmentText || ''}` });
   }
 
   try {
-    const openaiRes = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey}`
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o',
-        messages: [
-          { role: 'system', content: 'You are an expert certified personal trainer. Return ONLY valid JSON with no markdown, no code blocks, no extra text.' },
-          { role: 'user', content: userContent }
-        ],
-        max_tokens: 2000
-      })
-    });
+    const geminiRes = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          systemInstruction: {
+            parts: [
+              {
+                text: 'You are an expert certified personal trainer. Return ONLY valid JSON with no markdown, no code blocks, no extra text.'
+              }
+            ]
+          },
+          contents: [{ role: 'user', parts }],
+          generationConfig: {
+            maxOutputTokens: 4096,
+            temperature: 0.7,
+            thinkingConfig: { thinkingBudget: 0 }
+          }
+        })
+      }
+    );
 
-    if (!openaiRes.ok) {
-      if (openaiRes.status === 401) return res.status(401).json({ error: 'AI service authentication failed. Check the server API key.' });
-      if (openaiRes.status === 429) return res.status(429).json({ error: 'Rate limit reached. Wait a moment and try again.' });
+    if (!geminiRes.ok) {
+      const errorBody = await geminiRes.json().catch(() => null);
+      console.error(`Gemini ${geminiRes.status}:`, errorBody?.error ?? errorBody);
+      const status = geminiRes.status;
+      const geminiStatus = errorBody?.error?.status;
+
+      if (status === 400 && geminiStatus === 'INVALID_ARGUMENT') {
+        return res.status(401).json({ error: 'AI service authentication failed. Check the server API key.' });
+      }
+      if (status === 403) {
+        return res.status(401).json({ error: 'AI service authentication failed. Check the server API key.' });
+      }
+      if (status === 429) {
+        return res.status(429).json({ error: 'Rate limit reached. Wait a moment and try again.' });
+      }
       return res.status(502).json({ error: 'Could not reach the AI service. Please try again.' });
     }
 
-    const data = await openaiRes.json();
-    let raw = data.choices[0].message.content.trim();
+    const data = await geminiRes.json();
+    const candidate = data.candidates?.[0];
+
+    if (!candidate || candidate.finishReason === 'SAFETY') {
+      return res.status(422).json({ error: 'AI could not generate a plan from this input. Please try again.' });
+    }
+
+    let raw = (candidate.content?.parts?.[0]?.text || '').trim();
     raw = raw.replace(/^```json\s*/i, '').replace(/^```\s*/, '').replace(/```\s*$/, '');
 
     let plan;
     try {
       plan = JSON.parse(raw);
     } catch (parseErr) {
+      console.error('Gemini raw output (unparseable):', raw);
       return res.status(422).json({ error: 'AI returned an unexpected format. Please try again.' });
     }
 
     res.json({ plan });
   } catch (err) {
+    console.error('Gemini request failed:', err);
     res.status(502).json({ error: 'Could not connect. Check your connection.' });
   }
 });

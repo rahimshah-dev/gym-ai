@@ -9,14 +9,17 @@ This is **not** the production app. It has no accounts, no persistence beyond th
 ```bash
 cd apps/web-demo
 npm install
-cp .env.example .env   # add your own OPENAI_API_KEY
+cp .env.example .env   # add your own GEMINI_API_KEY (get one at aistudio.google.com/apikey)
 npm start
 ```
 Serves on `http://localhost:8420` by default (see `PORT` in `.env.example`).
 
 ## Why it has its own server
-`server.js` holds the OpenAI API key server-side and proxies `/api/generate-plan` — this was a deliberate fix (see git history) after an earlier version took a user-supplied key directly in the browser, which is insecure for anything public-facing. Don't reintroduce a client-side key here.
+`server.js` holds the Gemini API key server-side and proxies `/api/generate-plan` — this was a deliberate fix (see git history) after an earlier version took a user-supplied key directly in the browser, which is insecure for anything public-facing. Don't reintroduce a client-side key here.
+
+## AI provider
+Uses Google's Gemini API (`gemini-2.0-flash` by default, configurable via `GEMINI_MODEL` in `.env`) for both text and vision (equipment photo) requests. Originally built against OpenAI's GPT-4o — swapped to Gemini in `server.js`; the client-facing `/api/generate-plan` contract didn't change, so `index.html` needed no updates.
 
 ## If you're deploying this publicly (investor link, etc.)
-- Use a dedicated, rate-limited OpenAI key for this deployment — it's meant to be shared broadly, so budget for that.
+- Use a dedicated, rate-limited Gemini key for this deployment — it's meant to be shared broadly, so budget for that.
 - Consider adding the "this is a demo" banner mentioned in [docs/01-product/journeys/core-flows.md](../../docs/01-product/journeys/core-flows.md) §8 so it isn't mistaken for the finished product during a pitch.
