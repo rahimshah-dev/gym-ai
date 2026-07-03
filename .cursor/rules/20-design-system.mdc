@@ -1,0 +1,12 @@
+---
+description: Rules for packages/ui and packages/design-tokens
+globs: ["packages/ui/**", "packages/design-tokens/**"]
+alwaysApply: false
+---
+
+Read `/packages/ui/AGENTS.md` and `/packages/design-tokens/AGENTS.md` for full context. Highlights:
+
+- `packages/design-tokens` is the single source of truth for color/typography/spacing/radius/motion/elevation, ported from `/apps/web-demo/index.html`'s CSS custom properties. Never introduce a new token that duplicates an existing value.
+- `packages/ui` may depend on `packages/design-tokens` only — never on `packages/api` or `packages/domain`. Components take data via props.
+- Every new component should have a visual reference in `/apps/web-demo/index.html`, or an explicit note that it's intentionally new/native-only.
+- Minimum 44×44pt touch targets on every pressable (`minTouchTargetStyle()`).

@@ -1,0 +1,12 @@
+---
+description: Rules for apps/mobile
+globs: ["apps/mobile/**"]
+alwaysApply: false
+---
+
+Read `/apps/mobile/AGENTS.md` for full local context. Highlights:
+
+- `app/` holds Expo Router routes only — thin files that import a screen component from `src/features/*`, no screen logic inline in `app/`.
+- The guided-session screen (`app/(app)/session.tsx`) is the highest-risk surface in the app: it must survive backgrounding via wall-clock recomputation + a locally-scheduled notification, not a bare `setInterval`. See `/docs/01-product/journeys/core-flows.md` §3 before touching timer logic.
+- Import design values from `@gymai/ui`/`@gymai/design-tokens`, never hardcode colors/spacing.
+- Sign in with Apple must ship alongside any other third-party login (App Store 4.8).

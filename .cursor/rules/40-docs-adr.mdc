@@ -1,0 +1,9 @@
+---
+description: When and how to update docs and ADRs
+globs: ["docs/**"]
+alwaysApply: false
+---
+
+- If a change affects product behavior, architecture, or the design system, update the matching doc in `/docs/` in the same change — see the table in `/AGENTS.md` ("Documentation update rules").
+- Significant technical decisions (new dependency category, pattern change) get a new file in `/docs/03-architecture/adr/`, using `/docs/07-templates/adr-template.md`. ADRs are append-only — supersede, don't edit history.
+- Don't duplicate content between human docs (`/docs/`) and AI instruction files (`AGENTS.md`, this file) — AI files should reference the human docs, not restate them.

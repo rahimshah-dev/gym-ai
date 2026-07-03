@@ -1,14 +1,24 @@
 {
-  "name": "gymai-coach",
-  "version": "1.0.0",
+  "name": "gymai-coach-platform",
+  "version": "0.1.0",
   "private": true,
-  "description": "GymAI Coach — AI-powered personal gym coach",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
+  "description": "GymAI Coach monorepo — mobile app, shared packages, and investor/demo web app",
+  "license": "UNLICENSED",
+  "packageManager": "pnpm@9.9.0",
+  "engines": {
+    "node": ">=20"
   },
-  "dependencies": {
-    "dotenv": "^16.4.5",
-    "express": "^4.19.2"
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev --parallel",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "validate": "./scripts/validate.sh",
+    "bootstrap": "./scripts/bootstrap.sh"
+  },
+  "devDependencies": {
+    "turbo": "^2.1.0",
+    "typescript": "^5.6.0"
   }
 }

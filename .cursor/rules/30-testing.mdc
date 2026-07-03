@@ -1,0 +1,12 @@
+---
+description: Testing conventions across the workspace
+globs: ["**/*.test.ts", "**/*.test.tsx"]
+alwaysApply: false
+---
+
+Read `/docs/04-engineering/testing-strategy.md` for the full strategy. Highlights:
+
+- Use shared fixtures from `@gymai/testing` (e.g. `makeFakeWorkoutPlan()`) instead of hand-rolling fixtures per test file.
+- `packages/domain` should have close to 100% coverage — it's pure logic, no excuse not to.
+- `packages/api` tests must cover malformed AI responses, not just the happy path — the AI is a real source of "wrong shape" failures.
+- Don't write tests that only re-assert the type system, and don't snapshot every component's default render.

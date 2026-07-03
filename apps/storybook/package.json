@@ -1,0 +1,14 @@
+{
+  "name": "@gymai/storybook",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Component playground for @gymai/ui — optional, for design-system development in isolation from apps/mobile",
+  "scripts": {
+    "dev": "echo 'TODO: wire up @storybook/react-native once packages/ui has components to preview'",
+    "build": "echo 'no build step yet'"
+  },
+  "dependencies": {
+    "@gymai/ui": "workspace:*",
+    "@gymai/design-tokens": "workspace:*"
+  }
+}

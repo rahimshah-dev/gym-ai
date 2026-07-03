@@ -1,0 +1,23 @@
+# Default owner for anything not matched below.
+# Replace @rahimshah-dev with real team handles as the team grows.
+*                           @rahimshah-dev
+
+# Apps
+/apps/mobile/               @rahimshah-dev
+/apps/web-demo/             @rahimshah-dev
+/apps/storybook/            @rahimshah-dev
+
+# Design-system boundary — changes here affect every consumer.
+/packages/ui/                @rahimshah-dev
+/packages/design-tokens/     @rahimshah-dev
+
+# API contract boundary — changes here affect both apps.
+/packages/api/                @rahimshah-dev
+/packages/domain/             @rahimshah-dev
+
+# Architecture decisions require explicit review.
+/docs/03-architecture/adr/    @rahimshah-dev
+
+# CI/CD and release pipelines.
+/.github/workflows/           @rahimshah-dev
+/scripts/                     @rahimshah-dev

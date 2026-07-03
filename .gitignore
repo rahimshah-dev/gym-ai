@@ -1,2 +1,31 @@
+# Dependencies
 node_modules/
+.pnpm-store/
+
+# Env
 .env
+.env.local
+.env.*.local
+
+# Build outputs
+dist/
+build/
+.turbo/
+coverage/
+
+# Expo / React Native
+apps/mobile/.expo/
+apps/mobile/ios/
+apps/mobile/android/
+apps/mobile/*.jks
+apps/mobile/*.p8
+apps/mobile/*.p12
+apps/mobile/*.key
+apps/mobile/*.mobileprovision
+
+# OS / editor
+.DS_Store
+*.log
+
+# Local-only Claude Code dev server config (machine-specific ports/paths)
+.claude/launch.json

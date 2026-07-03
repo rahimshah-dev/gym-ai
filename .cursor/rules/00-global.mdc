@@ -1,0 +1,12 @@
+---
+description: Universal repo rules — read for every task
+alwaysApply: true
+---
+
+Read `/AGENTS.md` at the repo root for the full universal operating manual (stack, architecture boundaries, do-not list, documentation update rules). This rule file exists so Cursor loads that context automatically; don't duplicate its content here — refer to it.
+
+Key non-negotiables to keep top of mind:
+- pnpm + Turborepo only, never npm/yarn commands in scripts or CI.
+- `packages/domain` has zero UI/HTTP/React Native dependencies.
+- `packages/api` is the only package allowed to call `fetch()` against the production API.
+- Never put an API key in client-side code (`apps/mobile`, `apps/web-demo/index.html`).
