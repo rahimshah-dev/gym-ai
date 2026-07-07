@@ -4,9 +4,10 @@ Claude Code-specific guidance for this repo. Read `AGENTS.md` first for the univ
 
 ## How to read context in this repo
 1. Start with `AGENTS.md` (root) for repo-wide rules.
-2. Then read the nearest package/app `AGENTS.md` to whatever you're touching (e.g. `apps/mobile/AGENTS.md`, `packages/ui/AGENTS.md`) — these override/extend the root file with local detail, not contradict it.
-3. For product/behavior questions, check `docs/01-product/` before guessing — the PRD and journeys docs are the source of truth, not assumptions from the code alone.
-4. For "why is it built this way" questions, check `docs/03-architecture/adr/` before proposing a different approach — if a decision was already made and recorded, changing it needs a new ADR, not a silent deviation.
+2. Read `docs/01-product/roadmap/implementation-plan.md` for what's actually built vs. stubbed right now, and the current ordered next steps — this changes faster than the rest of the docs, treat it as the freshest source on project status.
+3. Then read the nearest package/app `AGENTS.md` to whatever you're touching (e.g. `apps/mobile/AGENTS.md`, `packages/ui/AGENTS.md`) — these override/extend the root file with local detail, not contradict it.
+4. For product/behavior questions, check `docs/01-product/` before guessing — the PRD and journeys docs are the source of truth, not assumptions from the code alone.
+5. For "why is it built this way" questions, check `docs/03-architecture/adr/` before proposing a different approach — if a decision was already made and recorded, changing it needs a new ADR, not a silent deviation.
 
 ## What to inspect before coding
 - Run `git log --oneline -10` and `git status` to see what's already in flight.

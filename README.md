@@ -28,7 +28,7 @@ docs/
   07-templates/   PRD/ADR/feature-spec/bug-report/release templates
 ```
 
-**New here? Read [docs/00-overview/repo-map.md](docs/00-overview/repo-map.md) next**, then [docs/00-overview/repository-guide.md](docs/00-overview/repository-guide.md) for recommended reading order by role (engineer, designer, PM, stakeholder, AI agent), [docs/00-overview/stakeholder-guide.md](docs/00-overview/stakeholder-guide.md) if you're non-technical, or [docs/04-engineering/local-development.md](docs/04-engineering/local-development.md) if you're about to write code.
+**New here? Read [docs/01-product/roadmap/implementation-plan.md](docs/01-product/roadmap/implementation-plan.md) first** — it's the current, honest status of what's actually built vs. still a stub, and the concrete next steps in order. Then [docs/00-overview/repo-map.md](docs/00-overview/repo-map.md), [docs/00-overview/repository-guide.md](docs/00-overview/repository-guide.md) for recommended reading order by role, [docs/00-overview/stakeholder-guide.md](docs/00-overview/stakeholder-guide.md) if you're non-technical, or [docs/04-engineering/local-development.md](docs/04-engineering/local-development.md) if you're about to write code.
 
 ## Quickstart
 
@@ -42,7 +42,7 @@ Running just the investor demo (no mobile toolchain needed):
 ```bash
 cd apps/web-demo
 npm install
-cp .env.example .env   # add your own OPENAI_API_KEY
+cp .env.example .env   # add your own GEMINI_API_KEY (get one at aistudio.google.com/apikey)
 npm start
 ```
 

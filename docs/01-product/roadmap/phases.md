@@ -2,7 +2,7 @@
 
 **Status:** Draft v1
 **Source of truth for:** what gets built when, and what "done" means for each phase.
-**See also:** [app-architecture.md](../../03-architecture/app-architecture.md) for the system design each phase implements, [gymai-coach-prd.md](../prd/gymai-coach-prd.md) for the feature/requirements detail.
+**See also:** [implementation-plan.md](implementation-plan.md) for the current-state snapshot and concrete next steps (that file changes faster than this one), [app-architecture.md](../../03-architecture/app-architecture.md) for the system design each phase implements, [gymai-coach-prd.md](../prd/gymai-coach-prd.md) for the feature/requirements detail.
 
 Each phase lists goal, key deliverables, and exit criteria. Estimates assume a small team (1–2 engineers + 1 designer, part-time PM).
 

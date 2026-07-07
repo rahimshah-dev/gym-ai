@@ -5,6 +5,8 @@ Universal operating manual for AI coding agents (Claude Code, Cursor, Copilot, o
 ## Mission
 Turn the `apps/web-demo` mockup into a production iOS + Android fitness app (`apps/mobile`) without losing the design/interaction quality the mockup already proved out. See `docs/01-product/prd/gymai-coach-prd.md` for the full product spec.
 
+**Before starting any new work, read `docs/01-product/roadmap/implementation-plan.md` first** — it tracks what's actually built vs. still a stub, and the concrete next steps in order. Don't assume something exists because a doc describes it; that file's §1 is the ground truth.
+
 ## Repo map
 See `docs/00-overview/repo-map.md` for the authoritative, explained version. Short form:
 - `apps/mobile` — production React Native (Expo) app.
@@ -17,7 +19,7 @@ See `docs/00-overview/repo-map.md` for the authoritative, explained version. Sho
 - Package manager: **pnpm** (workspace), task runner: **Turborepo**. Do not introduce npm/yarn commands into scripts or CI.
 - Mobile: **React Native via Expo**, **Expo Router** for navigation, **TypeScript** everywhere (`strict: true`, see `tsconfig.base.json`). See `docs/03-architecture/adr/0002-expo-react-native.md` and `0003-navigation.md` for why.
 - State: server/remote data via a query/cache layer in `packages/api`; client/UI state local to the owning feature; auth/session state in `packages/auth` + `packages/storage`. See `docs/03-architecture/adr/0004-state-strategy.md`. Do not introduce a second global state library without an ADR.
-- Backend AI calls: the OpenAI key is **server-side only**, never in client code. This was a deliberate fix early in the project (see `apps/web-demo/server.js` and git history) — do not regress it.
+- Backend AI calls: the AI provider key (currently Gemini, see `apps/web-demo/server.js`) is **server-side only**, never in client code. This was a deliberate fix early in the project (see git history) — do not regress it.
 
 ## How to run things
 ```bash
@@ -59,7 +61,7 @@ See `CODEOWNERS`. Changes to `packages/ui`, `packages/design-tokens`, `packages/
 ## Do NOT
 - Do not create a second API client, HTTP wrapper, or fetch helper outside `packages/api`.
 - Do not hardcode design values that already exist as tokens in `packages/design-tokens`.
-- Do not put the OpenAI (or any provider) API key in client-side code, ever.
+- Do not put any AI provider's API key (Gemini, OpenAI, or otherwise) in client-side code, ever.
 - Do not bypass the `apps/mobile` guided-session timer's wall-clock recomputation with a naive `setInterval`-only port from the mockup — see `docs/01-product/journeys/core-flows.md` §3 for why this matters.
 - Do not add a new global state library without recording the decision in an ADR first.
 
