@@ -12,7 +12,7 @@
 | Area | Status |
 |---|---|
 | `apps/web-demo` | **Working.** Full mockup, now running on Gemini (`gemini-2.5-flash`), verified end-to-end: setup → AI plan → guided timed session → completion. This is the only fully functional artifact in the repo today. |
-| `apps/mobile` | **Skeleton only.** Expo Router routes exist, but every screen is a placeholder (`<Text>Home placeholder</Text>` etc). `package.json` has illustrative dependency versions. `pnpm install` / `npx expo install` has never been run against it — it has not been booted, not even once, on a simulator. |
+| `apps/mobile` | **Skeleton only, but now installable.** Expo Router routes exist, but every screen is a placeholder (`<Text>Home placeholder</Text>` etc). `pnpm install`, lint, and typecheck all pass (fixed 2026-07-21 alongside the CI lockfile fix — see commit `cbcbd6c`). Still not yet run with `npx expo install` (real Expo SDK version resolution) or booted on a simulator/device — that's still the actual first step, install just no longer fails outright. |
 | `apps/storybook` | Not started. Deferred by design until `packages/ui` has enough components to need it. |
 | `packages/design-tokens`, `packages/domain` | Real content — tokens ported from the mockup's CSS, entities matching the PRD's data model. |
 | `packages/ui`, `packages/api` | Minimal working examples (`Button`/`Chip`/`Card`, `generatePlan` endpoint wrapper) — not a full component library or API client yet. |
@@ -48,8 +48,8 @@ Nothing above blocks starting *today's* immediate next steps in §3 — they onl
 
 Tagged **[Agent]** (can be done autonomously in a session), **[You]** (needs your account/payment/identity), or **[Both]**.
 
-1. **[Agent]** Run `pnpm install` at the repo root, then `npx expo install` inside `apps/mobile`, and actually boot it in a simulator or Expo Go. This is the first real test of whether the skeleton works — expect dependency-version friction since `package.json` was hand-written, not generated.
-2. **[Agent]** Fix whatever breaks in step 1 (version mismatches, missing peer deps, Metro config issues for the monorepo).
+1. ~~**[Agent]** Run `pnpm install` at the repo root~~ — **done** (2026-07-21): `pnpm install`, `pnpm lint`, `pnpm typecheck` all pass now (fixed alongside the CI lockfile issue). What's left: run `npx expo install` inside `apps/mobile` (real Expo SDK version resolution — current versions are still hand-picked) and actually boot it in a simulator or Expo Go for the first time.
+2. **[Agent]** Fix whatever breaks in step 1's remaining part (Expo SDK version resolution, Metro/simulator issues) — the install-level friction is resolved, but nothing has been booted on a device yet.
 3. **[You]** Start Apple Developer + Google Play Console enrollment now, in parallel with everything else — this is pure lead time, doesn't block other work.
 4. **[Agent]** Decide on a concrete backend project layout (likely a new `apps/api` — not yet created) and scaffold it: Express/Fastify, the chosen DB client, and port `apps/web-demo/server.js`'s Gemini `generate-plan` logic into it with real persistence (`workout_plans`, `exercises` tables per `app-architecture.md` §4.2).
 5. **[You]** Provision the actual hosting account + database once a provider is chosen (§2) — the agent can write the config/Terraform, but creating billed cloud resources needs your account.
