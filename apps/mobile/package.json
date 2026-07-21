@@ -9,8 +9,7 @@
     "android": "expo run:android",
     "build": "expo export",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit",
-    "test": "jest"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "expo": "~51.0.0",
@@ -42,6 +41,7 @@
   "devDependencies": {
     "@babel/core": "^7.24.0",
     "@types/react": "~18.2.0",
+    "@types/node": "^20.0.0",
     "typescript": "^5.6.0",
     "@gymai/eslint-config": "workspace:*",
     "@gymai/typescript-config": "workspace:*",
